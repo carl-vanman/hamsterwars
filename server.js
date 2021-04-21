@@ -1,12 +1,11 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const path = require('path')
+//const path = require('path')
 const hamsters = require('./routes/hamsters.js')
 
-const PORT = 1340
+const PORT = 1339
 //const staticFolder = path.join(__dirname, 'public')
-
 
 //Middleware
 app.use( express.json() )
@@ -24,7 +23,7 @@ app.get('/', (req, res) => {
 })
 
 // REST API for /hamsters
-app.use('hamsters', hamsters)
+app.use('/hamsters', hamsters)
 
 app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}`)
