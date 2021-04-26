@@ -9,8 +9,6 @@ if( process.env.PRIVATE_KEY ){
 	serviceAccount = require("./Firebase-private-key.json")
 }
 
-const serviceAccount = require("./Firebase-private-key.json");
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
