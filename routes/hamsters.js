@@ -4,86 +4,135 @@ const db = getDatabase()
 const express = require('express')
 const router = express.Router()
 const { postObjValidator, putObjValidator, makeArray} = require('../utils.js')
+const properties = ['age', 'defeats', 'favFood', 'games', 'imgName', 'loves', 'name', 'wins'];
+
 
 //GET /hamsters
 router.get('/', async (req, res) => {
-	const hamstersRef = db.collection('hamsters')
-	const snapshot = await hamstersRef.get()
+	try {
+		const hamstersRef = db.collection('hamsters')
+		const snapshot = await hamstersRef.get()
 
-	if( snapshot.empty ){
-		res.send([])
-		return
+		if( snapshot.empty ){
+			res.send([])
+			return
+		}
+
+		let items = makeArray(snapshot)
+		res.send(items)
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-
-	let items = makeArray(snapshot)
-	res.send(items)
 })
 
 //GET /hamsters/random
 router.get('/random', async (req, res) =>{
-	const hamstersRef = db.collection('hamsters')
-	const snapshot = await hamstersRef.get()
-	
-	if( snapshot.empty ){
-		res.send([])
-		return
+	try {
+		const hamstersRef = db.collection('hamsters')
+		const snapshot = await hamstersRef.get()
+		
+		if( snapshot.empty ){
+			res.send([])
+			return
+		}
+		let items = makeArray(snapshot)
+		let random = Math.floor(Math.random() * items.length)
+		res.status(200).send(items[random])
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-	let items = makeArray(snapshot)
-	let random = Math.floor(Math.random() * items.length)
-	res.send(items[random])
 })
 
 //GET /hamsters/:id
 router.get('/:id', async (req, res) => {
-	const id = req.params.id
-	const docRef = await db.collection('hamsters').doc(id).get()
+	try {
+		const id = req.params.id
+		const docRef = db.collection('hamsters').doc(id)
+		const doc = await docRef.get()
 
-	if( !docRef.exists ) {
-		res.status(404).send(`Hamster with id: ${id} doesn't exist`)
-		return
+		if( !doc.exists ) {
+			res.status(404).send(`Hamster with id: ${id} doesn't exist`)
+			return
+		}
+		const data = doc.data()
+		res.status(200).send(data)
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-	const data = docRef.data()
-	res.send(data)
 })
 
 //POST /hamsters
 router.post('/', async (req, res) => {
-	const obj = req.body
+	try {
+		const obj = req.body
+		//kontroll av obj
+		//global variable properties
+		if( !postObjValidator(obj, properties) ) {
+			res.sendStatus(400)
+			return
+		}
 
-	//kontroll av obj
-	if( !postObjValidator(obj) ) {
-		res.sendStatus(400)
-		return
+		const docRef = await db.collection('hamsters').add(obj)
+
+		res.status(200).send({id: docRef.id})
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-
-	const docRef = await db.collection('hamsters').add(obj)
-
-	res.status(200).send(docRef.id)
 })
 
 // PUT /hamsters/:id
 router.put('/:id', async (req, res) => {
-	let id = req.params.id
-	let obj = req.body
-	let docRef = await db.collection('hamsters').doc(id).get()
+	try {
+		const id = req.params.id
+		const obj = req.body
+		const docRef = db.collection('hamsters').doc(id)
+		const doc = await docRef.get()
 
-	if (!putObjValidator(obj) || !id || !Object.keys(obj).length){
-		res.sendStatus(400)
-		return
-	}
+		//global variable properties
+		if ( !putObjValidator(obj, properties) || !Object.keys(obj).length ){
+			console.log('400')
+			res.sendStatus(400)
+			return
+		}
+		else if ( !doc.exists) {
+			console.log('404')
+			res.sendStatus(404)
+			return
+		}
+		//await docRef.update(obj)
+		await docRef.set(obj, {merge: true})
+		console.log('200')
+		res.sendStatus(200)
 
-	if(!docRef.exists) {
-		res.sendStatus(404)
-		return
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-	
-	docRef = db.collection('hamsters').doc(id)
-	await docRef.set(obj, {merge: true})
-	res.sendStatus(200)
 })
 
 // DELETE /hamsters/:id
-
+router.delete('/:id', async (req, res) => {
+	try {
+		const id = req.params.id
+		let docRef = await db.collection('hamsters').doc(id).get()
+		console.log(id)
+	
+		// skickar ej statuskod om man inte skickar med ett id
+		if( !id ) {
+			res.sendStatus(400)
+			return
+		}
+	
+		if(!docRef.exists) {
+			res.sendStatus(404)
+			return
+		}
+	
+		await db.collection('hamsters').doc(id).delete()
+		res.sendStatus(200)
+	} catch (error) {
+		res.status(500).send(error.message)
+	}
+})
 
 
 module.exports = router

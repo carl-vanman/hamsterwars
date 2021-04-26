@@ -1,5 +1,5 @@
-function postObjValidator(obj){
-	const properties = ['age', 'defeats', 'favFood', 'games', 'imgName', 'loves', 'name', 'wins'];
+function postObjValidator(obj, arr){
+	const properties = arr
 	let result = true;
 
 	for (let i = 0; i < properties.length; i++) {
@@ -20,8 +20,8 @@ function postObjValidator(obj){
 	return result
 }
 
-function putObjValidator(obj){
-	const properties = ['age', 'defeats', 'favFood', 'games', 'imgName', 'loves', 'name', 'wins'];
+function putObjValidator(obj, arr){
+	const properties = arr
 	let result = true
 	for (const property in obj) {
 		if( !properties.includes(property) ){
@@ -31,7 +31,7 @@ function putObjValidator(obj){
 			result = false
 			break;
 		}else if(typeof obj[property] === "number"){
-			if(obj[element] < 0) {
+			if(obj[property] < 0) {
 				result = false
 				break;
 			}
