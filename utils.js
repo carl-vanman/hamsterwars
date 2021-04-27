@@ -4,6 +4,7 @@ function postObjValidator(obj, arr){
 
 	for (let i = 0; i < properties.length; i++) {
 		const element = properties[i];
+
 		if(!obj.hasOwnProperty(element)){
 		result = false
 			break;
@@ -55,11 +56,11 @@ function postMatchObjValidator(obj, arr) {
 	return result
 }
 
-
 function putObjValidator(obj, arr){
 	const properties = arr
 	let result = true
 	for (const property in obj) {
+
 		if(!properties.includes(property) ){
 			result = false
 			break;
