@@ -4,6 +4,7 @@ const cors = require('cors')
 const path = require('path')
 const hamsters = require('./routes/hamsters.js')
 const matches = require('./routes/matches.js')
+const matchWinners = require('./routes/matchWinners.js')
 
 const PORT = process.env.PORT || 1339
 const staticFolder = path.join(__dirname, 'static')
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 // REST API for /hamsters
 app.use('/hamsters', hamsters)
 app.use('/matches', matches)
+app.use('/matchWinners', matchWinners)
 
 app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}`)
