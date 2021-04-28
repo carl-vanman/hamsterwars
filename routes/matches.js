@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
 	}catch(error){
 		res.status(500).send(error.message)
 	}
-	
 })
 
 //GET /matches/:id
@@ -45,28 +44,32 @@ router.get('/:id', async (req, res) => {
 //POST /matches
 router.post('/', async (req, res) => {
 	const obj = req.body
+
+	console.log(obj)
+
 	try {
 		if( !postMatchObjValidator(obj, properties) ){
 			res.sendStatus(400)
 			return
 		}
 
-		const winnerRef = db.collection('hamsters').doc(obj.winnerId)
-		const loserRef = db.collection('hamsters').doc(obj.loserId)
-		const winnerHamster = await winnerRef.get()
-		const loserHamster = await loserRef.get()
+		// const winnerRef = db.collection('hamsters').doc(obj.winnerId)
+		// const loserRef = db.collection('hamsters').doc(obj.loserId)
+		// const winnerHamster = await winnerRef.get()
+		// const loserHamster = await loserRef.get()
 
-		if( !winnerHamster.exists || !loserHamster.exists ){
-			res.status(400)
-			return
-		}
+		// if( !winnerHamster.exists || !loserHamster.exists ){
+		// 	console.log("hamster id does not exists")
+		// 	res.status(400)
+		// 	return
+		// }
 
-		await winnerRef.update({
-			wins: admin.firestore.FieldValue.increment(1)
-		})
-		await loserRef.update({
-			defeats: admin.firestore.FieldValue.increment(1)
-		})
+		// await winnerRef.update({
+		// 	wins: admin.firestore.FieldValue.increment(1)
+		// })
+		// await loserRef.update({
+		// 	defeats: admin.firestore.FieldValue.increment(1)
+		// })
 
 		const docRef = await db.collection('matches').add(obj)
 		res.status(200).send({id: docRef.id})
