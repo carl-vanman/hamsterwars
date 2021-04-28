@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
 	const hamstersRef = db.collection('hamsters')
 	let items
 	try {
-		const snapshot = await hamstersRef.where('defeats', '>=', 0).orderBy('defeats', 'desc').limit(5).get();
+		const snapshot = await hamstersRef.orderBy('defeats', 'desc').limit(5).get();
 		if( snapshot.empty ){
 			res.status(404).send('Sorry, no hamsters was found at the moment')
 			return
