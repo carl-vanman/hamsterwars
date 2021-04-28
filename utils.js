@@ -20,21 +20,6 @@ function postObjValidator(obj, arr){
 	}
 	return result
 }
-//test, shorter syntax
-//function postObjValidator(obj, arr){
-// 	const properties = arr
-// 	let result = true;
-
-// 	for (let i = 0; i < properties.length; i++) {
-// 		const element = properties[i];
-		
-// 		!obj.hasOwnProperty(element) ? result = false :
-// 		typeof obj[element] !== "string" && typeof obj[element] !== "number" ? result = 		false :
-// 		obj[element] === "number" && obj[element] < 0 ? result = false : console.log			(`Object Property: ${element}, with value: ${obj[element]}, passed validation`)
-// 	}
-// 	console.log(result)
-// 	return result
-// }
 
 function postMatchObjValidator(obj, arr) {
 	const properties = arr

@@ -16,7 +16,7 @@ const staticImgFolder = path.join(__dirname, 'img')
 app.use( express.json() )
 app.use( cors() )
 app.use( express.static(staticFolder) )
-app.use( express.static(staticImgFolder) )
+app.use( '/img', express.static(staticImgFolder) )
 
 app.use((req, res, next) =>{
 	console.log(`${req.method} ${req.url}`, req.params);
