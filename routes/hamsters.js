@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 			return
 		}
 		items = makeArray(snapshot)
-		res.status(200).send(items) // ska denna flyttas utanför try?
+		res.status(200).send(items)
 	}catch( error ){
 		res.status(500).send(error.message)
 	}
@@ -69,7 +69,7 @@ router.post('/', async (req, res) => {
 			res.sendStatus(400)
 			return
 		}
-		const docRef = await db.collection('hamsters').add(obj) //byta namn till doc?
+		const docRef = await db.collection('hamsters').add(obj)
 		res.status(200).send({id: docRef.id})
 	}catch( error ){
 		res.status(500).send(error.message)
@@ -83,7 +83,6 @@ router.put('/:id', async (req, res) => {
 	const docRef = db.collection('hamsters').doc(id)
 	try {
 		const doc = await docRef.get()
-		//global variable properties
 		if( !putObjValidator(obj, properties) || !Object.keys(obj).length ){
 			res.sendStatus(400)
 			return
@@ -91,7 +90,6 @@ router.put('/:id', async (req, res) => {
 			res.sendStatus(404)
 			return
 		}
-		//await docRef.update(obj)
 		await docRef.set( obj, {merge: true} )
 		res.sendStatus(200)
 	}catch( error ){

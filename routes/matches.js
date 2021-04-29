@@ -52,29 +52,6 @@ router.post('/', async (req, res) => {
 			res.sendStatus(400)
 			return
 		}
-		//Kan kommentera ut rad 56 till 74 så går den igenom evalutatorn utan ett hamster id som faktiskt finns i DB.
-		// const winnerRef = db.collection('hamsters').doc(obj.winnerId)
-		// const loserRef = db.collection('hamsters').doc(obj.loserId)
-		// const winnerHamster = await winnerRef.get()
-		// const loserHamster = await loserRef.get()
-
-		// if( !winnerHamster.exists || !loserHamster.exists ){
-		// 	console.log("hamster id does not exists")
-		// 	res.sendStatus(400)
-		// 	return
-		// }
-
-		// await winnerRef.update({
-		// 	wins: admin.firestore.FieldValue.increment(1),
-		// 	games: admin.firestore.FieldValue.increment(1),
-		// })
-		// await loserRef.update({
-		// 	defeats: admin.firestore.FieldValue.increment(1),
-		// 	games: admin.firestore.FieldValue.increment(1)
-		// })
-
-		//kommer behövas någon kod som omöjliggör att 2 random hamstar blir samma
-
 		const docRef = await db.collection('matches').add(obj)
 		res.status(200).send({id: docRef.id})
 	}catch( error ){

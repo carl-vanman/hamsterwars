@@ -15,7 +15,6 @@ router.get('/', async (req, res) => {
 			res.status(404).send('Sorry, no hamsters was found at the moment')
 			return
 		}
-
 		items = makeArray(snapshot)
 		res.status(200).send(items)
 	}catch( error ){
